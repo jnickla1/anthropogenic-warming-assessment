@@ -9,7 +9,7 @@ import seaborn as sns
 # from src.definitions import moving_average
 import sys
 
-font_family = 'Roboto'
+font_family = 'Arial'
 
 matplotlib.rcParams.update({
     # General figure

@@ -7,7 +7,23 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from attribution_methods.GlobalWarmingIndex.src import graphing as gr
+#from attribution_methods.GlobalWarmingIndex.src import definitions as defs
+
+
+from pandas import Index
+
+# If for any reason your pandas 1.x still lacks Index.infer_objects,
+# make it a no-op so scmdata can call it.
+if not hasattr(Index, "infer_objects"):
+    Index.infer_objects = lambda self, copy=True: self
+
+# now proceed to import the rest
 from attribution_methods.GlobalWarmingIndex.src import definitions as defs
+
+# …and your existing code…
+#df_temp_PiC = defs.load_PiC_CMIP6(n_yrs, start_pi, end_pi)
+
+
 
 ###############################################################################
 # Checklist of inputs to this script that need updating each year:
