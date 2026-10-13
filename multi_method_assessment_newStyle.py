@@ -80,7 +80,7 @@ if __name__ == '__main__':
     
     var_names = {
         'Obs': 'Observed Warming',
-        'Ant': 'Total Human-induced Warming',
+        'Ant': 'Anthropogenic (Human-Induced)',
         'GHG': 'Well-mixed Greenhouse Gases',
         'OHF': 'Other Human Forcings',
         'Nat': 'Natural Forcings',
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     for ax,v in zip(axes.flatten(),plot_vars):
         ax.set_title(var_names[v])
         ax.scatter(years, temperature, color='lightgrey', label='HadCRUT5, annual',s=2)
-        for m, l in zip(['Walsh', 'Ribes', 'Gillett','Smith','Nicklas'], ['-', '--', ':','-','-']):
+        for i, m, l in zip(range(5),['Walsh', 'Ribes', 'Gillett','Smith','Nicklas'], ['-', '--', ':','-','-']):
             if m=='Walsh':
                 mn='Haustein'
             else:
@@ -120,6 +120,12 @@ if __name__ == '__main__':
                 dict_updates_ts[m].loc[:, (v, '50')].values,
                 color=method_colors[m],
                 ls=l, lw=2, alpha=0.7,label=(mn+": "+labels[m]))
+            for erryr in (np.array([start_yr/2+end_yr/2,end_yr])-8 + i*2):
+                errind = np.int16(erryr-start_yr)
+                ax.errorbar(erryr, dict_updates_ts[m].loc[:, (v, '50')].values[errind],
+                        yerr=[[dict_updates_ts[m].loc[:, (v, '95')].values[errind] - dict_updates_ts[m].loc[:, (v, '50')].values[errind]],
+                              [dict_updates_ts[m].loc[:, (v, '50')].values[errind] - dict_updates_ts[m].loc[:, (v, '5')].values[errind]]],
+                        color=method_colors[m],capsize=3)
         # Plot arbitrary lines so that separate black lines for each method
         # appear in the legend.
         if(v=="OHF"):
@@ -132,9 +138,9 @@ if __name__ == '__main__':
     axes[1,0].set_ylabel("Temperature Δ °C\n relative to 1850-1900")
     axes[1,0].set_xlabel("Year")
     axes[1,1].set_xlabel("Year")
-    axes[0,0].set_xlim(start_yr, end_yr)
+    axes[0,0].set_xlim(start_yr, end_yr+2)
     plt.tight_layout()
-    plt.savefig("multi_method_newStyle.pdf")
-    plt.savefig("multi_method_newStyle.png", dpi=500, bbox_inches='tight')
+    #plt.savefig("multi_method_newStyle.pdf")
+    #plt.savefig("multi_method_newStyle.png", dpi=500, bbox_inches='tight')
     plt.show()
     
